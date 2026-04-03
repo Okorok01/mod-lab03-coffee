@@ -1,8 +1,9 @@
+// Copyright 2025 <Student>
 #include "Automata.h"
 #include <iostream>
+#include <clocale>
 
 int main() {
-
     setlocale(LC_ALL, "Russian");
 
     std::cout << "=== Демонстрация работы автомата ===\n";
@@ -10,10 +11,9 @@ int main() {
 
     vm.on();
     vm.getMenu();
-     
 
     vm.coin(100);
-    vm.choice(0); 
+    vm.choice(0);
     vm.check();
     vm.cook();
 
@@ -21,7 +21,7 @@ int main() {
     Automata vm2;
     vm2.on();
     vm2.coin(50);
-    vm2.choice(1); 
+    vm2.choice(1);
     vm2.cancel();
     vm2.getMenu();
 

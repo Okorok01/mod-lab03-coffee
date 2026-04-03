@@ -1,4 +1,4 @@
-// Copyright 2022 GHA Test Team
+// Copyright 2025 <Student>
 #include "Automata.h"
 #include <iostream>
 #include <cassert>
@@ -139,4 +139,20 @@ void test_state_transitions() {
     a.cook();
     assert(a.getState() == States::WAIT);
     std::cout << "test_state_transitions passed\n";
+}
+
+int main() {
+    test_on_off();
+    test_coin();
+    test_cancel();
+    test_choice_invalid();
+    test_insufficient_funds();
+    test_cook_without_check();
+    test_finish_direct();
+    test_multiple_coins();
+    test_off_during_accept();
+    test_getMenu();
+    test_state_transitions();
+    std::cout << "All tests passed!\n";
+    return 0;
 }

@@ -1,10 +1,11 @@
+// Copyright 2025 <Student>
 #include "Automata.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 Automata::Automata() : cash(0), state(States::OFF), selected_item(-1) {
-    menu = { "Чай", "Кофе", "Молоко", "Какао", "Горячий шоколад" };
+    menu = { "Чай", "Кофе", " Молоко", "Какао", "Горячий шоколад" };
     prices = { 30, 50, 40, 45, 60 };
 }
 
@@ -12,8 +13,7 @@ void Automata::on() {
     if (state == States::OFF) {
         state = States::WAIT;
         std::cout << "Автомат включен. Состояние: WAIT\n";
-    }
-    else {
+    } else {
         std::cout << "Автомат уже включен или не в состоянии OFF\n";
     }
 }
@@ -24,8 +24,7 @@ void Automata::off() {
         cash = 0;
         selected_item = -1;
         std::cout << "Автомат выключен. Состояние: OFF\n";
-    }
-    else {
+    } else {
         std::cout << "Невозможно выключить во время приготовления\n";
     }
 }
@@ -38,9 +37,9 @@ void Automata::coin(int amount) {
     if (state == States::WAIT || state == States::ACCEPT) {
         cash += amount;
         state = States::ACCEPT;
-        std::cout << "Внесено " << amount << " руб. Текущая сумма: " << cash << "\n";
-    }
-    else {
+        std::cout << "Внесено " << amount << " руб. Текущая сумма: "
+                  << cash << "\n";
+    } else {
         std::cout << "Нельзя внести деньги в текущем состоянии\n";
     }
 }
@@ -48,7 +47,8 @@ void Automata::coin(int amount) {
 void Automata::getMenu() const {
     std::cout << "Меню:\n";
     for (size_t i = 0; i < menu.size(); ++i) {
-        std::cout << i + 1 << ". " << menu[i] << " - " << prices[i] << " руб.\n";
+        std::cout << i + 1 << ". " << menu[i] << " - "
+                  << prices[i] << " руб.\n";
     }
 }
 
@@ -80,9 +80,9 @@ bool Automata::check() {
         state = States::COOK;
         std::cout << "Денег достаточно. Начинаем приготовление...\n";
         return true;
-    }
-    else {
-        std::cout << "Недостаточно средств. Не хватает " << (prices[selected_item] - cash) << " руб.\n";
+    } else {
+        std::cout << "Недостаточно средств. Не хватает "
+                  << (prices[selected_item] - cash) << " руб.\n";
         state = States::ACCEPT;
         return false;
     }
@@ -97,8 +97,7 @@ void Automata::cancel() {
         selected_item = -1;
         state = States::WAIT;
         std::cout << "Операция отменена. Состояние: WAIT\n";
-    }
-    else {
+    } else {
         std::cout << "Отмена невозможна в текущем состоянии\n";
     }
 }
@@ -122,7 +121,8 @@ void Automata::finish() {
     if (state == States::COOK) {
         int price = prices[selected_item];
         cash -= price;
-        std::cout << "Списано " << price << " руб. Остаток на счете: " << cash << " руб.\n";
+        std::cout << "Списано " << price << " руб. Остаток: "
+                  << cash << " руб.\n";
         if (cash > 0) {
             std::cout << "Ваша сдача: " << cash << " руб.\n";
             cash = 0;
