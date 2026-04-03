@@ -140,4 +140,3 @@ void test_state_transitions() {
     assert(a.getState() == States::WAIT);
     std::cout << "test_state_transitions passed\n";
 }
-
