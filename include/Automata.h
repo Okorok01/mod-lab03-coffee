@@ -16,7 +16,7 @@ class Automata {
     std::vector<std::string> menu;
     std::vector<double> prices;
     States state;
-    int selected;  
+    int selected;
  public:
     Automata();
     void on();
