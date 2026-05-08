@@ -18,7 +18,7 @@ private:
     std::vector<std::string> menu;
     std::vector<double> prices;
     States state;
-    int selected;   // индекс выбранного напитка
+    int selected;   
 
 public:
     Automata();
