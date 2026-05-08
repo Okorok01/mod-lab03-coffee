@@ -2,30 +2,30 @@
 #include "Automata.h"
 #include <iostream>
 
-int main((int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+#include "Automata.h"
+#include <iostream>
 
+int main() {
     Automata machine;
 
     std::cout << "=== Демонстрация работы автомата ===\n";
-    machine.on();   
+    machine.on();
 
-        auto menu = machine.getMenu();
+    auto menu = machine.getMenu();
     std::cout << "Меню:\n";
     for (const auto& item : menu)
         std::cout << "  " << item << "\n";
 
-        machine.coin(1.0);
-    machine.coin(0.5);         
-    machine.choice(1);        
+    machine.coin(1.0);
+    machine.coin(0.5);
+    machine.choice(1);
     if (machine.check()) {
-        machine.cook();       
-        machine.finish();     
+        machine.cook();
+        machine.finish();
     }
 
     machine.coin(0.7);
-    machine.choice(4);        
+    machine.choice(4);
     if (machine.check()) {
         machine.cook();
         machine.finish();
