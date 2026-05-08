@@ -118,8 +118,3 @@ TEST(AutomataTest, CoinInCook) {
     EXPECT_EQ(a.getState(), States::COOK);
     EXPECT_DOUBLE_EQ(a.getCash(), cashBefore);
 }
-
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
