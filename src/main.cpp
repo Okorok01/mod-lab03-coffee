@@ -21,7 +21,6 @@ int main() {
         machine.finish();     
     }
 
-    // Второй напиток
     machine.coin(0.7);
     machine.choice(4);        
     if (machine.check()) {
