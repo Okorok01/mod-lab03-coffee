@@ -1,39 +1,36 @@
-// Copyright 2025 <Student>
+
 #include "Automata.h"
 #include <iostream>
-#include <clocale>
 
 int main() {
-    setlocale(LC_ALL, "Russian");
+    Automata machine;
 
     std::cout << "=== Демонстрация работы автомата ===\n";
-    Automata vm;
+    machine.on();   // OFF -> WAIT
 
-    vm.on();
-    vm.getMenu();
+    // Покажем меню
+    auto menu = machine.getMenu();
+    std::cout << "Меню:\n";
+    for (const auto& item : menu)
+        std::cout << "  " << item << "\n";
 
-    vm.coin(100);
-    vm.choice(0);
-    vm.check();
-    vm.cook();
+    // Первый напиток
+    machine.coin(1.0);
+    machine.coin(0.5);         // всего 1.5
+    machine.choice(1);         // Americano (1.5)
+    if (machine.check()) {
+        machine.cook();       // CHECK -> COOK (деньги списываются)
+        machine.finish();     // COOK -> WAIT
+    }
 
-    std::cout << "\n--- Тест отмены ---\n";
-    Automata vm2;
-    vm2.on();
-    vm2.coin(50);
-    vm2.choice(1);
-    vm2.cancel();
-    vm2.getMenu();
+    // Второй напиток
+    machine.coin(0.7);
+    machine.choice(4);         // Tea (0.7)
+    if (machine.check()) {
+        machine.cook();
+        machine.finish();
+    }
 
-    std::cout << "\n--- Тест недостатка денег ---\n";
-    Automata vm3;
-    vm3.on();
-    vm3.coin(20);
-    vm3.choice(0);
-    vm3.check();
-    vm3.coin(10);
-    vm3.check();
-    vm3.cook();
-
+    machine.off();
     return 0;
 }

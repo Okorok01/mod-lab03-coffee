@@ -1,9 +1,8 @@
-// Copyright 2025 <Student>
-#ifndef INCLUDE_AUTOMATA_H__
-#define INCLUDE_AUTOMATA_H__
+#ifndef AUTOMATA_H
+#define AUTOMATA_H
 
-#include <string>
 #include <vector>
+#include <string>
 
 enum class States {
     OFF,
@@ -14,25 +13,29 @@ enum class States {
 };
 
 class Automata {
- private:
-    int cash;
+private:
+    double cash;
     std::vector<std::string> menu;
-    std::vector<int> prices;
+    std::vector<double> prices;
     States state;
-    int selected_item;
+    int selected;   // индекс выбранного напитка
 
- public:
+public:
     Automata();
+
     void on();
     void off();
-    void coin(int amount);
-    void getMenu() const;
+    void coin(double amount);
+    std::vector<std::string> getMenu() const;
     States getState() const;
-    bool choice(int index);
+    void choice(int index);
     bool check();
     void cancel();
     void cook();
     void finish();
+
+    double getCash() const { return cash; }
+    int getSelected() const { return selected; }
 };
 
-#endif  // INCLUDE_AUTOMATA_H__
+#endif

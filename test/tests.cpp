@@ -1,142 +1,139 @@
-// Copyright 2025 <Student>
 #include "Automata.h"
-#include <iostream>
-#include <cassert>
+#include <gtest/gtest.h>
 
-void test_on_off() {
+// Тест 1: Начальное состояние
+TEST(AutomataTest, InitialState) {
     Automata a;
-    assert(a.getState() == States::OFF);
+    EXPECT_EQ(a.getState(), States::OFF);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.0);
+}
+
+// Тест 2: Включение и выключение
+TEST(AutomataTest, OnOff) {
+    Automata a;
     a.on();
-    assert(a.getState() == States::WAIT);
+    EXPECT_EQ(a.getState(), States::WAIT);
     a.off();
-    assert(a.getState() == States::OFF);
-    std::cout << "test_on_off passed\n";
+    EXPECT_EQ(a.getState(), States::OFF);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.0);
 }
 
-void test_coin() {
+// Тест 3: Внос монет в состоянии WAIT
+TEST(AutomataTest, CoinInWait) {
     Automata a;
     a.on();
-    a.coin(50);
-    assert(a.getState() == States::ACCEPT);
-    a.coin(30);
-    a.choice(0);
-    assert(a.getState() == States::CHECK);
-    a.check();
-    assert(a.getState() == States::COOK);
+    a.coin(10.0);
+    EXPECT_EQ(a.getState(), States::ACCEPT);
+    EXPECT_DOUBLE_EQ(a.getCash(), 10.0);
+}
+
+// Тест 4: Накопление монет
+TEST(AutomataTest, CoinAccumulation) {
+    Automata a;
+    a.on();
+    a.coin(5.0);
+    a.coin(3.0);
+    EXPECT_DOUBLE_EQ(a.getCash(), 8.0);
+    EXPECT_EQ(a.getState(), States::ACCEPT);
+}
+
+// Тест 5: Успешный выбор и проверка
+TEST(AutomataTest, ChoiceAndCheckSuccess) {
+    Automata a;
+    a.on();
+    a.coin(2.0);     // достаточно для Latte (индекс 2, цена 2.0)
+    a.choice(2);
+    EXPECT_EQ(a.getState(), States::CHECK);
+    EXPECT_TRUE(a.check());
+    // Деньги на этом этапе ещё не списаны
+    EXPECT_DOUBLE_EQ(a.getCash(), 2.0);
+    EXPECT_EQ(a.getState(), States::CHECK);
+}
+
+// Тест 6: Неуспешная проверка (недостаточно средств)
+TEST(AutomataTest, ChoiceAndCheckFailure) {
+    Automata a;
+    a.on();
+    a.coin(0.5);
+    a.choice(0);     // Espresso – 1.0
+    EXPECT_FALSE(a.check());
+    EXPECT_EQ(a.getState(), States::ACCEPT);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.5);
+}
+
+// Тест 7: Приготовление и завершение
+TEST(AutomataTest, CookAndFinish) {
+    Automata a;
+    a.on();
+    a.coin(1.5);
+    a.choice(1);     // Americano – 1.5
+    ASSERT_TRUE(a.check());
     a.cook();
-    assert(a.getState() == States::WAIT);
-    std::cout << "test_coin passed\n";
-}
-
-void test_cancel() {
-    Automata a;
-    a.on();
-    a.coin(100);
-    a.cancel();
-    assert(a.getState() == States::WAIT);
-    bool res = a.choice(0);
-    assert(!res);
-    assert(a.getState() == States::WAIT);
-    std::cout << "test_cancel passed\n";
-}
-
-void test_choice_invalid() {
-    Automata a;
-    a.on();
-    a.coin(50);
-    bool res = a.choice(10);
-    assert(!res);
-    assert(a.getState() == States::ACCEPT);
-    res = a.choice(-1);
-    assert(!res);
-    assert(a.getState() == States::ACCEPT);
-    std::cout << "test_choice_invalid passed\n";
-}
-
-void test_insufficient_funds() {
-    Automata a;
-    a.on();
-    a.coin(20);
-    a.choice(0);
-    assert(a.getState() == States::CHECK);
-    bool ok = a.check();
-    assert(!ok);
-    assert(a.getState() == States::ACCEPT);
-    a.coin(10);
-    a.check();
-    assert(a.getState() == States::COOK);
-    std::cout << "test_insufficient_funds passed\n";
-}
-
-void test_cook_without_check() {
-    Automata a;
-    a.on();
-    a.coin(50);
-    a.choice(0);
-    a.cook();
-    assert(a.getState() == States::CHECK);
-    std::cout << "test_cook_without_check passed\n";
-}
-
-void test_finish_direct() {
-    Automata a;
-    a.on();
-    a.coin(50);
-    a.choice(0);
-    a.check();
-    a.cook();
-    assert(a.getState() == States::WAIT);
+    EXPECT_EQ(a.getState(), States::COOK);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.0); // деньги списаны
     a.finish();
-    assert(a.getState() == States::WAIT);
-    std::cout << "test_finish_direct passed\n";
+    EXPECT_EQ(a.getState(), States::WAIT);
 }
 
-void test_multiple_coins() {
+// Тест 8: Отмена в состоянии ACCEPT
+TEST(AutomataTest, CancelInAccept) {
     Automata a;
     a.on();
-    a.coin(10);
-    a.coin(20);
-    a.coin(5);
-    a.choice(1);
-    a.check();
-    assert(a.getState() == States::ACCEPT);
-    a.coin(15);
-    a.check();
-    assert(a.getState() == States::COOK);
-    a.cook();
-    assert(a.getState() == States::WAIT);
-    std::cout << "test_multiple_coins passed\n";
+    a.coin(5.0);
+    a.cancel();
+    EXPECT_EQ(a.getState(), States::WAIT);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.0);
 }
 
-void test_off_during_accept() {
+// Тест 9: Отмена в состоянии CHECK
+TEST(AutomataTest, CancelInCheck) {
     Automata a;
     a.on();
-    a.coin(100);
+    a.coin(3.0);
+    a.choice(2);     // Переход в CHECK
+    a.cancel();
+    EXPECT_EQ(a.getState(), States::WAIT);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.0);
+}
+
+// Тест 10: Выключение из состояния COOK
+TEST(AutomataTest, OffFromCook) {
+    Automata a;
+    a.on();
+    a.coin(0.7);
+    a.choice(4);     // Tea – 0.7
+    ASSERT_TRUE(a.check());
+    a.cook();        // Переход в COOK
     a.off();
-    assert(a.getState() == States::OFF);
-    bool res = a.choice(0);
-    assert(!res);
-    std::cout << "test_off_during_accept passed\n";
+    EXPECT_EQ(a.getState(), States::OFF);
+    EXPECT_DOUBLE_EQ(a.getCash(), 0.0);
 }
 
-void test_getMenu() {
+// Тест 11: Вызов check() в состоянии ACCEPT (не должен ничего менять)
+TEST(AutomataTest, CheckInAccept) {
     Automata a;
-    a.getMenu();
-    std::cout << "test_getMenu passed\n";
-}
-
-void test_state_transitions() {
-    Automata a;
-    assert(a.getState() == States::OFF);
     a.on();
-    assert(a.getState() == States::WAIT);
-    a.coin(10);
-    assert(a.getState() == States::ACCEPT);
-    a.choice(0);
-    assert(a.getState() == States::CHECK);
-    a.check();
-    assert(a.getState() == States::COOK);
-    a.cook();
-    assert(a.getState() == States::WAIT);
-    std::cout << "test_state_transitions passed\n";
+    a.coin(2.0);
+    EXPECT_FALSE(a.check());   // не в CHECK – возвращает false
+    EXPECT_EQ(a.getState(), States::ACCEPT);
+}
+
+// Тест 12: Монеты не принимаются во время приготовления
+TEST(AutomataTest, CoinInCook) {
+    Automata a;
+    a.on();
+    a.coin(1.0);
+    a.choice(0);     // Espresso – 1.0
+    ASSERT_TRUE(a.check());
+    a.cook();        // Переход в COOK
+    double cashBefore = a.getCash();
+    a.coin(100.0);   // не должно быть принято
+    EXPECT_EQ(a.getState(), States::COOK);
+    EXPECT_DOUBLE_EQ(a.getCash(), cashBefore);
+}
+
+// Точка входа для Google Test
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
