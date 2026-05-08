@@ -1,8 +1,6 @@
-#include <gtest/gtest.h>
+// Copyright 2025 Vladislav
 #include "Automata.h"
-#include <iostream>
 
-#include "Automata.h"
 #include <iostream>
 
 int main() {

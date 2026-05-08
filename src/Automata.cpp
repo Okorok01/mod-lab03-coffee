@@ -1,9 +1,12 @@
-
+// Copyright 2025 Vladislav
 #include "Automata.h"
+
 #include <iostream>
+#include <string>
+#include <vector>
 
 Automata::Automata() : cash(0.0), state(States::OFF), selected(-1) {
-        menu   = {"Espresso", "Americano", "Latte", "Cappuccino", "Tea"};
+    menu   = {"Espresso", "Americano", "Latte", "Cappuccino", "Tea"};
     prices = {1.0, 1.5, 2.0, 2.5, 0.7};
 }
 

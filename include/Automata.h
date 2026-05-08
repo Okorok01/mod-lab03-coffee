@@ -1,5 +1,6 @@
-#ifndef AUTOMATA_H
-#define AUTOMATA_H
+// Copyright 2025 Vladislav
+#ifndef INCLUDE_AUTOMATA_H__
+#define INCLUDE_AUTOMATA_H__
 
 #include <vector>
 #include <string>
@@ -13,14 +14,14 @@ enum class States {
 };
 
 class Automata {
-private:
+ private:
     double cash;
     std::vector<std::string> menu;
     std::vector<double> prices;
     States state;
-    int selected;   
+    int selected;  
 
-public:
+ public:
     Automata();
 
     void on();
@@ -38,4 +39,4 @@ public:
     int getSelected() const { return selected; }
 };
 
-#endif
+#endif 
